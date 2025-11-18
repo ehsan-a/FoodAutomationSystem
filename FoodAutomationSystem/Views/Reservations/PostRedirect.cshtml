@@ -1,0 +1,9 @@
+﻿@model Reservation
+
+<form id="postForm" method="post" asp-controller="Home" asp-action="ReservationSuccess">
+    <input type="hidden" name="id" value="@Model.Id" />
+</form>
+
+<script>
+    document.getElementById("postForm").submit();
+</script>
