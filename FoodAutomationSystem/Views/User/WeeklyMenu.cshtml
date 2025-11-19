@@ -1,4 +1,4 @@
-﻿@model WeeklyMenuViewModel
+﻿@model FoodAutomationSystem.Models.ViewModels.WeeklyMenuViewModel
 
 <div class="container py-4">
 
@@ -59,12 +59,12 @@
 
         @if (Model.Breakfast != null)
         {
-            @Html.Partial("_MealCard", new MealCardVM { FoodMenu = Model.Breakfast, Date = Model.SelectedDate, IsPast = Model.IsDeadlinePassed })
+            @Html.Partial("_MealCard", new FoodAutomationSystem.Models.ViewModels.FoodMenuViewModel { FoodMenu = Model.Breakfast, Date = Model.SelectedDate, IsPast = Model.IsDeadlinePassed })
         }
 
         @if (Model.Lunch != null)
         {
-            @Html.Partial("_MealCard", new MealCardVM { FoodMenu = Model.Lunch, Date = Model.SelectedDate, IsPast = Model.IsDeadlinePassed })
+            @Html.Partial("_MealCard", new FoodAutomationSystem.Models.ViewModels.FoodMenuViewModel { FoodMenu = Model.Lunch, Date = Model.SelectedDate, IsPast = Model.IsDeadlinePassed })
         }
 
     </div>

@@ -61,7 +61,7 @@ namespace FoodAutomationSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FoodMenuId,UserId")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("FoodMenuId,UserId,TransactionId")] Reservation reservation)
         {
             if (ModelState.IsValid)
             {

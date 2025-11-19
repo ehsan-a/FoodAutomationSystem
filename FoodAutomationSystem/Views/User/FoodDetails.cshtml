@@ -1,11 +1,11 @@
-﻿@model FoodDetailsViewModel
+﻿@model FoodAutomationSystem.Models.ViewModels.FoodMenuViewModel
 @{
-    var food = Model.Food;
+    var food = Model.FoodMenu.Food;
     var foodTimes = new Dictionary<FoodType, string>
     {
         { FoodType.Breakfast, "7:00 AM - 9:00 AM" },
         { FoodType.Lunch, "12:00 PM - 2:00 PM" },
-       
+
     };
 
     string foodTypeClass = food.Type == FoodType.Breakfast ? "bg-primary text-white" :
@@ -65,26 +65,29 @@
             <!-- Ingredients -->
             @* @if (food.Ingredients != null && food.Ingredients.Any())
             { *@
-                <div class="mb-4">
-                    <h5 class="mb-3">Ingredients</h5>
-                    <div class="d-flex flex-wrap gap-2">
-                        @* @foreach (var ingredient in food.Ingredients)
+            <div class="mb-4">
+                <h5 class="mb-3">Ingredients</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    @* @foreach (var ingredient in food.Ingredients)
                         { *@
-                            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary">#ingredient</span>
-                        @* } *@
-                    </div>
+                    <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary">#ingredient</span>
+                    @* } *@
                 </div>
+            </div>
             @* } *@
 
             <!-- Actions -->
             <div class="d-flex flex-column flex-md-row gap-3">
                 <a href="javascript:history.back();" class="btn btn-outline-secondary flex-fill">Close</a>
-                <form method="post" asp-action="ReserveMeal" class="flex-fill">
-                    <input type="hidden" name="mealId" value="@food.Id" />
-                    <button type="submit" class="btn btn-primary w-100">Reserve This Meal</button>
+                <form asp-action="ReservationFlow" method="post">
+                    <input type="hidden" name="foodMenuId" value="@Model.FoodMenu.Id" />
+                    <input type="hidden" name="date" value="@Model.Date" />
+                    <button class="btn btn-primary px-4"
+                            @(Model.IsPast ? "disabled" : "")>
+                        @(Model.IsPast ? "Deadline Passed" : "Reserve")
+                    </button>
                 </form>
             </div>
-
         </div>
     </div>
 </div>

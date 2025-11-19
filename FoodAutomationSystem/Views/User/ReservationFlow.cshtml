@@ -1,4 +1,5 @@
-﻿@model ReservationFlowViewModel
+﻿@using FoodAutomationSystem.Models.ViewModels
+@model ReservationFlowViewModel
 @{
     var user = Model.User;
     var foodMenu = Model.FoodMenu;
@@ -61,12 +62,14 @@
             <!-- Actions -->
             <div class="d-flex flex-column flex-md-row gap-3">
                 <button class="btn btn-outline-secondary flex-fill" onclick="onCancel()">Cancel</button>
+              
+                <form asp-controller="Transactions" asp-action="Payment" method="post">
 
-                <form asp-controller="Reservations" asp-action="Create" method="post">
-
-                    <input name="FoodMenuId" value="@foodMenu.Id" type="hidden" />
                     <input name="UserId" value="@user.Id" type="hidden" />
+                    <input name="Amount" value="@foodMenu.Food.Price" type="hidden" />
+                    <input name="FoodMenuId" value="@foodMenu.Id" type="hidden" />
                    
+
                     <button class="btn btn-primary flex-fill" @(WalletBalance < foodMenu.Food.Price ? "disabled" : "")>
                         Confirm & Pay <i class="bi bi-arrow-right ms-1"></i>
                     </button>
@@ -105,11 +108,11 @@
 
 <script>
     function onCancel() {
-        
+
         window.history.back();
     }
     function onConfirm() {
-      
+
         alert("Reservation confirmed! (replace with actual action)");
     }
 </script>

@@ -4,6 +4,7 @@ using FoodAutomationSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodAutomationSystem.Migrations
 {
     [DbContext(typeof(FoodAutomationSystemContext))]
-    partial class FoodAutomationSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20251119173610_AddAvailableInFood")]
+    partial class AddAvailableInFood
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

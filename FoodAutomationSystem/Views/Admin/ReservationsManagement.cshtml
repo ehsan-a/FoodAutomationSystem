@@ -1,0 +1,241 @@
+﻿@model IEnumerable<Reservation>
+
+@{
+    ViewData["Title"] = "Reservation Management";
+}
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">Reservation Management</h2>
+            <p class="text-muted mb-0">View and manage all meal reservations</p>
+        </div>
+
+        <a href="#" class="btn btn-outline-primary d-flex align-items-center gap-2">
+            <i class="bi bi-download"></i>
+            Export Report
+        </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="p-4 border rounded-3 shadow-sm bg-white">
+                <p class="text-muted mb-1">Total Reservations</p>
+                <h4 class="fw-bold">@Model.Count()</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="p-4 border rounded-3 shadow-sm bg-white">
+                <p class="text-muted mb-1">Confirmed</p>
+                <h4 class="text-success fw-bold">
+                    @Model.Count(r => r.Status ==ReservationStatus.Confirmed)
+                </h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="p-4 border rounded-3 shadow-sm bg-white">
+                <p class="text-muted mb-1">Cancelled</p>
+                <h4 class="text-danger fw-bold">
+                    @Model.Count(r => r.Status == ReservationStatus.Cancelled)
+                </h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="p-4 border rounded-3 shadow-sm bg-white">
+                <p class="text-muted mb-1">Total Revenue</p>
+                <h4 class="fw-bold text-dark">
+                    $@Model.Where(r => r.PaymentStatus == ReservationPaymentStatus.Success).Sum(r => r.Price).ToString("0.00")
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="p-4 bg-white rounded-4 shadow-sm border mb-4">
+        <div class="row g-3">
+
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input id="searchInput" type="text" class="form-control"
+                           placeholder="Search..." />
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <select id="dateFilter" class="form-select">
+                    <option value="all">All Dates</option>
+                    @foreach (var d in Model.Select(m => m.Date).Distinct())
+                    {
+                        <option value="@d">@d.ToString("yyyy-MM-dd")</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select id="mealFilter" class="form-select">
+                    <option value="all">All Meal Types</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select id="paymentFilter" class="form-select">
+                    <option value="all">All Payment Status</option>
+                    <option value="success">Success</option>
+                    <option value="failed">Failed</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-4 shadow-sm border overflow-hidden">
+
+        <div class="table-responsive">
+            <table class="table align-middle mb-0" id="reservationTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Reservation ID</th>
+                        <th>Student</th>
+                        <th>Meal</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Price</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th style="width: 160px;">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>@r.Id</td>
+
+                            <td>
+                                <div>
+                                    <div class="fw-bold">@r.User.LastName</div>
+                                    <small class="text-muted">@r.UserId</small>
+                                </div>
+                            </td>
+
+                            <td>@r.FoodMenu.Food.Title</td>
+
+                            <td>
+                                <span class="badge
+                                        @(r.FoodMenu.Food.Type == FoodType.Breakfast ? "bg-primary" :
+                                      r.FoodMenu.Food.Type == FoodType.Lunch ? "bg-success" : "bg-warning text-dark")">
+                                    @r.FoodMenu.Food.Type
+                                </span>
+                            </td>
+
+                            <td>@r.Date.ToString("MMM dd, yyyy")</td>
+
+                            <td>$@r.Price.ToString("0.00")</td>
+
+                            <td>
+                                <span class="badge
+                                        @(r.PaymentStatus == ReservationPaymentStatus.Success ? "bg-success" :
+                                                r.PaymentStatus == ReservationPaymentStatus.Failed ? "bg-danger" : "bg-warning text-dark")">
+                                    @r.PaymentStatus
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge
+                                        @(r.Status ==ReservationStatus.Confirmed ? "bg-primary" :
+                                                         r.Status == ReservationStatus.Cancelled ? "bg-secondary" : "bg-info")">
+                                    @r.Status
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="d-flex gap-2">
+
+                                    @if (r.Status == ReservationStatus.Confirmed)
+                                    {
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-x"></i> Cancel
+                                        </button>
+                                    }
+
+                                    @if (r.Status == ReservationStatus.Cancelled)
+                                    {
+                                        <button class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-check"></i> Approve
+                                        </button>
+                                    }
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center border-top px-4 py-3">
+            <p class="text-muted mb-0">Showing @Model.Count() reservations</p>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" disabled>Previous</button>
+                <button class="btn btn-outline-secondary btn-sm" disabled>Next</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const dateFilter = document.getElementById("dateFilter");
+    const mealFilter = document.getElementById("mealFilter");
+    const paymentFilter = document.getElementById("paymentFilter");
+    const rows = document.querySelectorAll("#reservationTable tbody tr");
+
+    function filterTable() {
+        const s = searchInput.value.toLowerCase();
+        const d = dateFilter.value;
+        const m = mealFilter.value;
+        const p = paymentFilter.value;
+
+        rows.forEach(row => {
+            const cells = row.children;
+
+            const id = cells[0].textContent.toLowerCase();
+            const student = cells[1].textContent.toLowerCase();
+            const meal = cells[2].textContent.toLowerCase();
+            const type = cells[3].textContent.toLowerCase();
+            const date = cells[4].textContent.toLowerCase();
+            const payment = cells[6].textContent.toLowerCase();
+
+            const matchesSearch = id.includes(s) || student.includes(s) || meal.includes(s);
+            const matchesDate = d === "all" || date.includes(d);
+            const matchesMealType = m === "all" || type === m;
+            const matchesPayment = p === "all" || payment === p;
+
+            row.style.display = (matchesSearch && matchesDate && matchesMealType && matchesPayment)
+                ? ""
+                : "none";
+        });
+    }
+
+    searchInput.addEventListener("input", filterTable);
+    dateFilter.addEventListener("change", filterTable);
+    mealFilter.addEventListener("change", filterTable);
+    paymentFilter.addEventListener("change", filterTable);
+</script>

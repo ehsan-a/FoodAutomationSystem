@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FoodAutomationSystem.Data;
 using FoodAutomationSystem.Models;
+using FoodAutomationSystem.Models.ViewModels;
 
 namespace FoodAutomationSystem.Controllers
 {
@@ -57,7 +58,7 @@ namespace FoodAutomationSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Amount,Date,Description,Type,Status,UserId")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("Amount,Description,Type,Status,UserId")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
@@ -67,6 +68,27 @@ namespace FoodAutomationSystem.Controllers
             }
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", transaction.UserId);
             return View(transaction);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Payment([Bind("UserId,FoodMenuId,Amount")] ReservationDataViewModel reservationDataViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var transaction = new Transaction
+                {
+                    Amount = reservationDataViewModel.Amount,
+                    Description = "Reservation",
+                    Type = TransactionType.Reservation,
+                    Status = TransactionStatus.Success,
+                    UserId = reservationDataViewModel.UserId,
+                };
+                _context.Add(transaction);
+                await _context.SaveChangesAsync();
+                reservationDataViewModel.TransactionId = transaction.Id;
+                return View("PostRedirect", reservationDataViewModel);
+            }
+            return View();
         }
 
         // GET: Transactions/Edit/5

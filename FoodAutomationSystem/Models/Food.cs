@@ -9,7 +9,7 @@
         public FoodType Type { get; set; }
         public decimal Price { get; set; }
         public int Calories { get; set; }
-
+        public bool Available { get; set; }
         public List<FoodMenu>? FoodMenus { get; set; }
     }
 }

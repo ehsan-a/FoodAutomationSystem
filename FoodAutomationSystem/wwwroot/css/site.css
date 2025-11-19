@@ -20,4 +20,6 @@ html {
 body {
     margin-bottom: 60px;
     font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f7f7f7, #e8e8e8);
+    background-attachment: fixed;
 }

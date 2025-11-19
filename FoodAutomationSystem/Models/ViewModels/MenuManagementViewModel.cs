@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace FoodAutomationSystem.Models
+namespace FoodAutomationSystem.Models.ViewModels
 {
     public class MenuManagementViewModel
     {

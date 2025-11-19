@@ -23,6 +23,8 @@
         public DateTime Date { get; set; } = DateTime.Now;
         public string QRCode { get; set; } = Guid.NewGuid().ToString();
         public decimal Price { get; set; }
+        public int TransactionId { get; set; }
+        public Transaction? Transaction { get; set; }
         public ReservationStatus Status { get; set; }
         public ReservationPaymentStatus PaymentStatus { get; set; }
     }

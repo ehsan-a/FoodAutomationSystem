@@ -1,4 +1,4 @@
-﻿@model UserOverviewViewModel
+﻿@model FoodAutomationSystem.Models.ViewModels.UserOverviewViewModel
 
 <div class="container py-4">
 
@@ -94,8 +94,8 @@
                                 </span>
 
                                 <span class="badge rounded-pill
-                                                    @(reservation.FoodMenu.Food.Type == FoodType.Breakfast ? "bg-primary" :
-                                                                                  reservation.FoodMenu.Food.Type == FoodType.Lunch ? "bg-success" : "bg-warning text-dark")">
+                                                            @(reservation.FoodMenu.Food.Type == FoodType.Breakfast ? "bg-primary" :
+                                                                                                                        reservation.FoodMenu.Food.Type == FoodType.Lunch ? "bg-success" : "bg-warning text-dark")">
                                     @reservation.FoodMenu.Food.Type
                                 </span>
                             </div>
@@ -120,34 +120,34 @@
     </div>
 
 
-    <!-- Today's Menu -->
+    <!-- Tomorrow's Menu -->
     <div class="mb-4">
         <div class="d-flex justify-content-between mb-3">
-            <h4 class="fw-bold text-dark">Today's Menu</h4>
+            <h4 class="fw-bold text-dark">Tomorrow's Menu</h4>
             <span class="text-muted small">
                 <i class="bi bi-clock"></i>
-                @DateTime.Now.ToString("MMMM dd, yyyy")
+                @DateTime.Now.AddDays(1).ToString("MMMM dd, yyyy")
             </span>
         </div>
 
         <div class="row g-3">
 
-            @foreach (var food in Model.TodaysFoods)
+            @foreach (var food in Model.TomorrowsFood)
             {
                 <div class="col-12 col-md-4">
                     <div class="card food-card shadow-sm rounded-4">
 
                         <div class="card-body">
-                            <h5 class="card-title">@food.Title</h5>
+                            <h5 class="card-title">@food.Food.Title</h5>
 
                             <span class="badge rounded-pill @(
-                                  food.Type == FoodType.Breakfast ? "bg-primary" :
-                                  food.Type == FoodType.Lunch ? "bg-success" : "bg-warning text-dark")">
-                                @food.Type
+                                  food.Food.Type == FoodType.Breakfast ? "bg-primary" :
+                                  food.Food.Type == FoodType.Lunch ? "bg-success" : "bg-warning text-dark")">
+                                @food.Food.Type
                             </span>
 
                             <div class="d-flex justify-content-between text-muted mb-3 mt-2 small">
-                                <span class="fw-bold">$@food.Price.ToString("F2")</span>
+                                <span class="fw-bold">$@food.Food.Price.ToString("F2")</span>
                                 <span>150 cal</span>
                             </div>
 

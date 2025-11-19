@@ -1,4 +1,4 @@
-﻿namespace FoodAutomationSystem.Models
+﻿namespace FoodAutomationSystem.Models.ViewModels
 {
     public class UserReservationsViewModel
     {

@@ -1,4 +1,5 @@
-﻿@model UserWalletViewModel
+﻿@using FoodAutomationSystem.Models.ViewModels
+@model UserWalletViewModel
 
 <div class="container py-4">
 
@@ -149,8 +150,8 @@
                         </div>
 
                         <div class="text-end">
-                            <p class="fw-bold @(t.Amount >= 0 ? "text-success" : "text-danger") mb-1">
-                                @(t.Amount >= 0 ? "+" : "-")$@Math.Abs(t.Amount).ToString("0.00")
+                            <p class="fw-bold @(t.Type == TransactionType.WalletTopUp ? "text-success" : "text-danger") mb-1">
+                                @(t.Type == TransactionType.WalletTopUp ? "+" : "-")$@Math.Abs(t.Amount).ToString("0.00")
                             </p>
                             <span class="badge @(t.Status == TransactionStatus.Success ? "bg-success bg-opacity-25 text-success" :
                                                                                    t.Status == TransactionStatus.Failed ? "bg-danger bg-opacity-25 text-danger" :
