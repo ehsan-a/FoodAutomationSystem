@@ -12,105 +12,93 @@
             <h2 class="fw-bold mb-1">Menu Management</h2>
             <p class="text-muted mb-0">Manage all foods in the system</p>
         </div>
-        <a asp-action="Create" class="btn btn-primary px-4 d-flex align-items-center gap-2 shadow-sm">
-            <i class="bi bi-plus-lg"></i>
-            Add Meal
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2 shadow-sm">
+            <i class="bi bi-plus-lg"></i> Add Meal
         </a>
     </div>
 
     <!-- Filters -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Search</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-white">
-                            <i class="bi bi-search"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Search meals..." id="searchBox" />
-                    </div>
+    <div class="nice-card mb-4 p-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label fw-semibold">Search</label>
+                <div class="input-group rounded-pill overflow-hidden">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" placeholder="Search meals..." id="searchBox" />
                 </div>
+            </div>
 
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">Meal Type</label>
-                    <select class="form-select" id="mealTypeFilter">
-                        <option value="all">All Meals</option>
-                        <option value="breakfast">Breakfast</option>
-                        <option value="lunch">Lunch</option>
-                        <option value="dinner">Dinner</option>
-                    </select>
-                </div>
+            <div class="col-md-5">
+                <label class="form-label fw-semibold">Meal Type</label>
+                <select class="form-select rounded-pill" id="mealTypeFilter">
+                    <option value="all">All Meals</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select>
             </div>
         </div>
     </div>
 
     <!-- Table -->
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle text-center mb-0" id="mealsTable">
-                    <thead class="table-light">
+    <div class="nice-card overflow-hidden">
+        <div class="table-responsive">
+            <table class="table modern-table align-middle text-center mb-0" id="mealsTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Calories</th>
+                        <th>Status</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var meal in Model)
+                    {
                         <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Price</th>
-                            <th>Calories</th>
-                            <th>Status</th>
-                            <th style="width: 150px;">Actions</th>
+                            <td class="fw-semibold">@meal.Title</td>
+
+                            <td>
+                                <span class="pill-badge @(
+                                      meal.Type == FoodType.Breakfast ? "bg-primary text-white" :
+                                      meal.Type == FoodType.Lunch ? "bg-success text-white" :
+                                      "bg-warning text-dark")">
+                                    @meal.Type
+                                </span>
+                            </td>
+
+                            <td>$@meal.Price</td>
+                            <td>@meal.Calories cal</td>
+
+                            <td>
+                                <span class="pill-badge @(meal.Available ? "bg-success text-white" : "bg-secondary text-white")">
+                                    @(meal.Available ? "Available" : "Unavailable")
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a asp-action="Edit" asp-route-id="@meal.Id" class="btn btn-outline-primary btn-sm px-3">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@meal.Id" method="post">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var meal in Model)
-                        {
-                            <tr class="table-row-hover">
-                                <td class="fw-semibold">@meal.Title</td>
-
-                                <td>
-                                    <span class="badge px-3 py-2 rounded-pill
-                                            @(meal.Type == FoodType.Breakfast ? "bg-primary" :
-                                                                                    meal.Type == FoodType.Lunch ? "bg-success" : "bg-warning text-dark")">
-                                        @meal.Type
-                                    </span>
-                                </td>
-
-                                <td>$@meal.Price</td>
-                                <td>@meal.Calories cal</td>
-
-                                <td>
-                                    @if (meal.Available)
-                                    {
-                                        <span class="badge bg-success px-3 py-2 rounded-pill">Available</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary px-3 py-2 rounded-pill">Unavailable</span>
-                                    }
-                                </td>
-
-                                <td>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <a asp-action="Edit" asp-route-id="@meal.Id"
-                                           class="btn btn-outline-primary btn-sm px-3">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-
-                                        <form asp-action="Delete" asp-route-id="@meal.Id" method="post">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm px-3">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
+
 </div>
 
 <!-- Live Filtering JS -->
@@ -139,8 +127,53 @@
 </script>
 
 <style>
-   
-    .table-row-hover:hover {
-        background-color: #f8f9fa !important;
+    /* Cards & rounded */
+    .nice-card {
+        background: #ffffff !important;
+        border-radius: 22px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        padding: 1.5rem !important;
+    }
+
+    /* Table */
+    .modern-table {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+        .modern-table thead th {
+            border-bottom: 2px solid #f0f0f0;
+            background: #ffffff;
+        }
+
+        .modern-table tbody tr {
+            background: #ffffff;
+            border-bottom: 1px solid #f3f3f3;
+            transition: 0.2s;
+        }
+
+            .modern-table tbody tr:hover {
+                background: #f7faff !important;
+            }
+
+    /* Inputs & selects */
+    .form-control,
+    .form-select,
+    .input-group-text {
+        background: #ffffff !important;
+        border: 1px solid #e3e3e3 !important;
+        border-radius: 20px !important;
+    }
+
+    /* Badges */
+    .pill-badge {
+        padding: 0.35rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+
+    /* Input group fix */
+    .input-group-text {
+        border-right: none !important;
     }
 </style>
